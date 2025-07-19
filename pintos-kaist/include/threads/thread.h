@@ -3,11 +3,8 @@
 
 #include <debug.h>
 #include <list.h>
-// #include "../lib/debug.h"
-// #include "../lib/kernel/list.h"
 #include <stdint.h>
 #include "threads/interrupt.h"
-// #include "./interrupt.h"
 #ifdef VM
 #include "vm/vm.h"
 #endif
@@ -104,12 +101,6 @@ struct thread {
     struct list_elem donation_elem;    /* 여러 donation list 와 연결될 수 있는 */ 
 
     struct lock *waiting_lock;          /* 내가 기다리고 있는 락 */
-
-    /* project 2 을 위한 구조체 */
-    uint64_t *pml4;
-
-        
-
 
 #ifdef USERPROG
 	/* userprog/process.c가 소유 */
