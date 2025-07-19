@@ -17,21 +17,21 @@ enum intr_level intr_disable (void);
 
 /* 인터럽트 스택 프레임 */
 struct gp_registers {
-	uint64_t r15;
-	uint64_t r14;
-	uint64_t r13;
-	uint64_t r12;
-	uint64_t r11;
-	uint64_t r10;
-	uint64_t r9;
-	uint64_t r8;
-	uint64_t rsi;
-	uint64_t rdi;
-	uint64_t rbp;
-	uint64_t rdx;
-	uint64_t rcx;
-	uint64_t rbx;
-	uint64_t rax;
+	uint64_t r15;			/* Caller saved*/
+	uint64_t r14;			/* Caller saved*/
+	uint64_t r13;			/* Caller saved*/
+	uint64_t r12;			/* Caller saved*/
+	uint64_t r11;			/* Caller saved*/
+	uint64_t r10;			/* Caller saved*/
+	uint64_t r9;			/* 6th argument	*/
+	uint64_t r8;			/* 5th argument */
+	uint64_t rsi;			/* 2nd argument: argv */
+	uint64_t rdi;			/* 1st argument: argc */
+	uint64_t rbp;			/* Callee saved (함수 주소) */
+	uint64_t rdx;			/* 3rd argument */
+	uint64_t rcx;			/* 4th argument */
+	uint64_t rbx;			/* Callee saved (복원 레지스터) */
+	uint64_t rax;			/* Return value */
 } __attribute__((packed));
 
 struct intr_frame {
