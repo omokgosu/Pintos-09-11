@@ -38,17 +38,27 @@ struct intr_frame {
 	/* intr-stubs.S의 intr_entry에 의해 스택에 푸시됨.
 	   인터럽트가 발생한 작업의 저장된 레지스터들 */
 	struct gp_registers R;        /* 범용 레지스터들 (rax, rbx, rcx, rdx, rsi, rdi, rbp, r8-r15) */
-	uint64_t vec_no;              /* 인터럽트 벡터 번호 */
-	uint64_t error_code;          /* 에러 코드 */
-	void (*eip) (void);           /* 인터럽트된 코드 주소 */
-	uint16_t cs;                  /* 코드 세그먼트 */
-	uint16_t pad1;                /* 패딩 */
-	uint32_t pad2;                /* 패딩 */
-	uint64_t eflags;              /* 저장된 플래그 레지스터 */
-	void *esp;                    /* 인터럽트된 스택 포인터 */
-	uint16_t ss;                  /* 스택 세그먼트 */
-	uint16_t pad3;                /* 패딩 */
-	uint32_t pad4;                /* 패딩 */
+	uint16_t es;                  /* 확장 세그먼트 레지스터 (Extra Segment register) */
+    uint16_t pad1;                /* 패딩 (메모리 정렬을 위한 공간) */
+	uint32_t pad2;                /* 패딩 (메모리 정렬을 위한 공간) */
+	uint16_t ds;                  /* 데이터 세그먼트 레지스터 (Data Segment register) */
+	uint16_t pad3;                /* 패딩 (메모리 정렬을 위한 공간) */
+	uint32_t pad4;                /* 패딩 (메모리 정렬을 위한 공간) */
+    /* intr-stubs.S의 intrNN_stub에 의해 푸시됨 */
+    uint64_t vec_no;              /* 인터럽트 벡터 번호 (어떤 인터럽트인지 식별) */
+	/* CPU에 의해 때때로 푸시되며, 일관성을 위해 intrNN_stub에서 0으로 푸시됨.
+	   CPU는 이를 `eip` 바로 아래에 두지만, 우리는 여기로 이동시킴 */
+	uint64_t error_code;          /* 에러 코드 (인터럽트 발생 시 추가 정보) */
+
+	uintptr_t rip;                /* 명령어 포인터 (Instruction Pointer - 다음 실행할 명령어 주소) */
+	uint16_t cs;                  /* 코드 세그먼트 레지스터 (Code Segment register) */
+	uint16_t __pad5;              /* 패딩 (메모리 정렬을 위한 공간) */
+	uint32_t __pad6;              /* 패딩 (메모리 정렬을 위한 공간) */
+	uint64_t eflags;              /* 플래그 레지스터 (프로세서 상태 플래그들) */
+	uintptr_t rsp;                /* 스택 포인터 (Stack Pointer - 현재 스택의 최상단 주소) */
+	uint16_t ss;                  /* 스택 세그먼트 레지스터 (Stack Segment register) */
+	uint16_t __pad7;              /* 패딩 (메모리 정렬을 위한 공간) */
+	uint32_t __pad8;              /* 패딩 (메모리 정렬을 위한 공간) */
 } __attribute__((packed));
 
 typedef void intr_handler_func (struct intr_frame *);
