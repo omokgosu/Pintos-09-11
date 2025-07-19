@@ -86,12 +86,16 @@ pml4e_walk (uint64_t *pml4e, const uint64_t va, int create) {
 	return pte;
 }
 
-/* 커널 가상 주소에 대한 매핑을 가지지만 사용자 가상 주소에 대한 매핑은 없는
-   새로운 페이지 맵 레벨 4(pml4)를 생성합니다.
-   새로운 페이지 디렉터리를 반환하거나, 메모리 할당이 실패하면 null 포인터를 반환합니다. */
+/* 
+	새로운 Page Map Level 4 (PML4) 를 생성한다.
+	이 새 PML4에는 커널 가상 주소에 대한 매핑만 있고,
+	사용자 가상 주소에 대한 매핑은 없다.
+	실패 시 NULL을 반환한다.
+*/
 uint64_t *
 pml4_create (void) {
-	uint64_t *pml4 = palloc_get_page (0);
+	/* page table: 가상 주소 -> 물리 주소 */
+	uint64_t *pml4 = palloc_get_page (0); // 4KB 할당 받는 함수
 	if (pml4)
 		memcpy (pml4, base_pml4, PGSIZE);
 	return pml4;

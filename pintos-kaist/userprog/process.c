@@ -159,8 +159,22 @@ error:
  * 실패 시 -1을 반환합니다. */
 int
 process_exec (void *f_name) {
-	char *file_name = f_name;
+	char *file_name = f_name, *token, *save_ptr;
+	int i = 0;
+	int kb = 1024 * 4;
 	bool success;
+	
+	/* 명렁어 전체 길이 제한 4KB */
+	ASSERT(strlen(f_name) <= kb);
+
+	/* page의 사이즈 만큼 메모리 공간을 할당해주거나, 조건문을 통해 확인한다. */
+	for (token = strtok_r(f_name, " ", &save_ptr); token != NULL; token = strtok_r(NULL, " ", &save_ptr))	{
+		if (i == 0) {
+			file_name = token;
+		}
+		printf("'%s'\n", token);
+		i++;
+	}
 
 	/* 스레드 구조의 intr_frame을 사용할 수 없습니다.
 	 * 이는 현재 스레드가 다시 스케줄될 때,
